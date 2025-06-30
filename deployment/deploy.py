@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 configs = Config()
 
-STAGING_BUCKET = f"gs://{configs.CLOUD_PROJECT}-adk-customer-service-staging"
+STAGING_BUCKET = f"gs://{configs.CLOUD_PROJECT}-adk-library-service-staging"
 
 AGENT_WHL_FILE = "./customer_service-0.1.0-py3-none-any.whl"
 

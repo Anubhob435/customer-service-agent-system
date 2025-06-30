@@ -1,10 +1,10 @@
-# Cymbal Home & Garden Customer Service Agent
+# Literati Library & Bookstore Customer Service Agent
 
-This project implements an AI-powered customer service agent for Cymbal Home & Garden, a big-box retailer specializing in home improvement, gardening, and related supplies. The agent is designed to provide excellent customer service, assist customers with product selection, manage orders, schedule services, and offer personalized recommendations.
+This project implements an AI-powered customer service agent for Literati Library & Bookstore, a comprehensive library and bookstore specializing in books, reading materials, and literary services. The agent is designed to provide excellent customer service, assist customers with book selection, manage orders, schedule reading consultations, and offer personalized reading recommendations.
 
 ## Overview
 
-The Cymbal Home & Garden Customer Service Agent is designed to provide a seamless and personalized shopping experience for customers. It leverages Gemini to understand customer needs, offer tailored product recommendations, manage orders, and schedule services. The agent is designed to be friendly, empathetic, and highly efficient, ensuring that customers receive the best possible service.
+The Literati Library & Bookstore Customer Service Agent is designed to provide a seamless and personalized book discovery experience for customers. It leverages Gemini to understand customer reading preferences, offer tailored book recommendations, manage orders, and schedule reading consultations. The agent is designed to be friendly, empathetic, and highly knowledgeable about literature, ensuring that customers receive the best possible service.
 
 ## Agent Details
 
@@ -16,7 +16,7 @@ The key features of the Customer Service Agent include:
 | _Complexity_       | Intermediate            |
 | _Agent Type_       | Single Agent            |
 | _Components_       | Tools, Multimodal, Live |
-| _Vertical_         | Retail                  |
+| _Vertical_         | Library & Books         |
 
 ### Agent Architecture
 
@@ -31,27 +31,27 @@ Because the tools are mocked you might notice that some requested changes will n
 ### Key Features
 
 - **Personalized Customer Assistance:**
-  - Greets returning customers by name and acknowledges their purchase history.
+  - Greets returning customers by name and acknowledges their borrowing/purchase history.
   - Maintains a friendly, empathetic, and helpful tone.
-- **Product Identification and Recommendation:**
-  - Assists customers in identifying plants, even from vague descriptions.
-  - Requests and utilizes visual aids (video) to accurately identify plants.
-  - Provides tailored product recommendations based on identified plants, customer needs, and location (e.g., Las Vegas, NV).
+- **Book Identification and Recommendation:**
+  - Assists customers in identifying books, even from vague descriptions.
+  - Requests and utilizes visual aids (video) to discuss reading preferences.
+  - Provides tailored book recommendations based on customer reading history, preferences, and interests.
   - Offers alternatives to items in the customer's cart if better options exist.
 - **Order Management:**
   - Accesses and displays the contents of a customer's shopping cart.
   - Modifies the cart by adding and removing items based on recommendations and customer approval.
   - Informs customers about relevant sales and promotions.
 - **Upselling and Service Promotion:**
-  - Suggests relevant services, such as professional planting services.
+  - Suggests relevant services, such as reading consultations, book club memberships, or author events.
   - Handles inquiries about pricing and discounts, including competitor offers.
   - Requests manager approval for discounts when necessary.
 - **Appointment Scheduling:**
-  - Schedules appointments for planting services (or other services).
+  - Schedules appointments for reading consultations (or other services).
   - Checks available time slots and presents them to the customer.
   - Confirms appointment details and sends a confirmation/calendar invite.
 - **Customer Support and Engagement:**
-  - Sends via sms or email plant care instructions relevant to the customer's purchases and location.
+  - Sends via sms or email reading recommendations and book care tips relevant to the customer's interests.
   - Offers a discount QR code for future in-store purchases to loyal customers.
 - **Tool-Based Interactions:**
   - The agent interacts with the user using a set of tools.
@@ -75,11 +75,11 @@ The agent has access to the following tools:
 - `update_salesforce_crm(customer_id: str, details: str) -> dict`: Updates customer records in Salesforce.
 - `access_cart_information(customer_id: str) -> dict`: Retrieves the customer's cart contents.
 - `modify_cart(customer_id: str, items_to_add: list, items_to_remove: list) -> dict`: Updates the customer's cart.
-- `get_product_recommendations(plant_type: str, customer_id: str) -> dict`: Suggests suitable products.
-- `check_product_availability(product_id: str, store_id: str) -> dict`: Checks product stock.
-- `schedule_planting_service(customer_id: str, date: str, time_range: str, details: str) -> dict`: Books a planting service appointment.
-- `get_available_planting_times(date: str) -> list`: Retrieves available time slots.
-- `send_care_instructions(customer_id: str, plant_type: str, delivery_method: str) -> dict`: Sends plant care information.
+- `get_book_recommendations(book_genre: str, customer_id: str) -> dict`: Suggests suitable books for a given genre.
+- `check_product_availability(product_id: str, store_id: str) -> dict`: Checks book stock.
+- `schedule_reading_consultation(customer_id: str, date: str, time_range: str, details: str) -> dict`: Books a reading consultation appointment.
+- `get_available_consultation_times(date: str) -> list`: Retrieves available consultation time slots.
+- `send_reading_recommendations(customer_id: str, reading_interests: str, delivery_method: str) -> dict`: Sends personalized reading recommendations.
 - `generate_qr_code(customer_id: str, discount_value: float, discount_type: str, expiration_days: int) -> dict`: Creates a discount QR code.
 
 ## Setup and Installations
@@ -167,13 +167,13 @@ Here's a quick example of how a user might interact with the agent:
 hi there
 
 **Agent**:
-Hey Alex, I see you've been a Cymbal Home & Garden customer for a couple of years now - we appreciate your business! I also see you have a few things in your cart already. How can I help you get your garden growing today?
+Hey Alex, I see you've been a Literati Library & Bookstore customer for a couple of years now - we appreciate your business! I also see you have a few things in your cart already. How can I help you find your next great read today?
 
 **User**:
-Yeah, so I'm a bit confused. I just bought some...uh...plants or flowers that I wanted to put in the backyard. They just say "sun loving annuals" on them. I totally spaced on picking up potting soil so I'm placing an order for pickup now. The problem is, I'm not sure if the potting soil and fertilizer I picked out are the right ones.
+Yeah, so I'm a bit confused. I just finished reading some mystery novels and I loved them. I'm looking for something similar but maybe with a different twist. I have a couple of books in my cart but I'm not sure if they're the right ones for me.
 
 **Agent**:
-I understand – it can be tricky when you're not quite sure what you've got! Let's figure this out together. Don't worry, we'll get your plants the right care. To best help you, would you be willing to share a quick video of the plants you've purchased? That will help me identify them and make sure you have the right supplies.
+I understand – finding the perfect next book can be exciting but also overwhelming! Let's figure this out together. I'd love to help you discover some great mystery novels with unique twists. To best help you, would you be willing to share a quick video call so we can discuss your reading preferences in more detail?
 
 **User**:
 Sure, how do I do that?
@@ -193,7 +193,7 @@ print(send_call_companion_link(phone_number='+12065550123'))
 Okay, I clicked the link...can you see this?
 
 **Agent**:
-Yes I can see you Alex! Can you go ahead and point the camera at your plants so I can inspect them?
+Yes I can see you Alex! I'd love to hear more about the mystery novels you've enjoyed recently. Can you tell me about some of your favorites and what specifically you liked about them?
 
 **User**:
 Yes of course!

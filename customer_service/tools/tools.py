@@ -126,13 +126,13 @@ def access_cart_information(customer_id: str) -> dict:
     mock_cart = {
         "items": [
             {
-                "product_id": "soil-123",
-                "name": "Standard Potting Soil",
+                "product_id": "book-123",
+                "name": "The Silent Patient by Alex Michaelides",
                 "quantity": 1,
             },
             {
-                "product_id": "fert-456",
-                "name": "General Purpose Fertilizer",
+                "product_id": "book-456",
+                "name": "Atomic Habits by James Clear",
                 "quantity": 1,
             },
         ],
@@ -170,39 +170,54 @@ def modify_cart(
     }
 
 
-def get_product_recommendations(plant_type: str, customer_id: str) -> dict:
-    """Provides product recommendations based on the type of plant.
+def get_book_recommendations(book_genre: str, customer_id: str) -> dict:
+    """Provides book recommendations based on the genre or topic of interest.
 
     Args:
-        plant_type: The type of plant (e.g., 'Petunias', 'Sun-loving annuals').
+        book_genre: The genre or topic of interest (e.g., 'Mystery', 'Science Fiction', 'Self-help').
         customer_id: Optional customer ID for personalized recommendations.
 
     Returns:
-        A dictionary of recommended products. Example:
+        A dictionary of recommended books. Example:
         {'recommendations': [
-            {'product_id': 'soil-456', 'name': 'Bloom Booster Potting Mix', 'description': '...'},
-            {'product_id': 'fert-789', 'name': 'Flower Power Fertilizer', 'description': '...'}
+            {'product_id': 'book-456', 'name': 'Gone Girl by Gillian Flynn', 'description': '...'},
+            {'product_id': 'book-789', 'name': 'The Girl with the Dragon Tattoo', 'description': '...'}
         ]}
     """
     #
     logger.info(
-        "Getting product recommendations for plant " "type: %s and customer %s",
-        plant_type,
+        "Getting book recommendations for genre " "type: %s and customer %s",
+        book_genre,
         customer_id,
     )
     # MOCK API RESPONSE - Replace with actual API call or recommendation engine
-    if plant_type.lower() == "petunias":
+    if book_genre.lower() == "mystery":
         recommendations = {
             "recommendations": [
                 {
-                    "product_id": "soil-456",
-                    "name": "Bloom Booster Potting Mix",
-                    "description": "Provides extra nutrients that Petunias love.",
+                    "product_id": "book-456",
+                    "name": "Gone Girl by Gillian Flynn",
+                    "description": "A psychological thriller that will keep you guessing.",
                 },
                 {
-                    "product_id": "fert-789",
-                    "name": "Flower Power Fertilizer",
-                    "description": "Specifically formulated for flowering annuals.",
+                    "product_id": "book-789",
+                    "name": "The Girl with the Dragon Tattoo by Stieg Larsson",
+                    "description": "A gripping Nordic noir mystery series.",
+                },
+            ]
+        }
+    elif book_genre.lower() == "science fiction":
+        recommendations = {
+            "recommendations": [
+                {
+                    "product_id": "book-sci1",
+                    "name": "Dune by Frank Herbert",
+                    "description": "A classic science fiction epic.",
+                },
+                {
+                    "product_id": "book-sci2",
+                    "name": "The Martian by Andy Weir",
+                    "description": "A thrilling survival story on Mars.",
                 },
             ]
         }
@@ -210,14 +225,14 @@ def get_product_recommendations(plant_type: str, customer_id: str) -> dict:
         recommendations = {
             "recommendations": [
                 {
-                    "product_id": "soil-123",
-                    "name": "Standard Potting Soil",
-                    "description": "A good all-purpose potting soil.",
+                    "product_id": "book-123",
+                    "name": "Educated by Tara Westover",
+                    "description": "A powerful memoir about education and family.",
                 },
                 {
-                    "product_id": "fert-456",
-                    "name": "General Purpose Fertilizer",
-                    "description": "Suitable for a wide variety of plants.",
+                    "product_id": "book-456",
+                    "name": "Atomic Habits by James Clear",
+                    "description": "A practical guide to building good habits.",
                 },
             ]
         }
@@ -225,22 +240,22 @@ def get_product_recommendations(plant_type: str, customer_id: str) -> dict:
 
 
 def check_product_availability(product_id: str, store_id: str) -> dict:
-    """Checks the availability of a product at a specified store (or for pickup).
+    """Checks the availability of a book at a specified store or library.
 
     Args:
-        product_id: The ID of the product to check.
-        store_id: The ID of the store (or 'pickup' for pickup availability).
+        product_id: The ID of the book to check.
+        store_id: The ID of the store/library (or 'pickup' for pickup availability).
 
     Returns:
         A dictionary indicating availability.  Example:
-        {'available': True, 'quantity': 10, 'store': 'Main Store'}
+        {'available': True, 'quantity': 10, 'store': 'Main Library'}
 
     Example:
-        >>> check_product_availability(product_id='soil-456', store_id='pickup')
+        >>> check_product_availability(product_id='book-456', store_id='pickup')
         {'available': True, 'quantity': 10, 'store': 'pickup'}
     """
     logger.info(
-        "Checking availability of product ID: %s at store: %s",
+        "Checking availability of book ID: %s at store: %s",
         product_id,
         store_id,
     )
@@ -248,27 +263,27 @@ def check_product_availability(product_id: str, store_id: str) -> dict:
     return {"available": True, "quantity": 10, "store": store_id}
 
 
-def schedule_planting_service(
+def schedule_reading_consultation(
     customer_id: str, date: str, time_range: str, details: str
 ) -> dict:
-    """Schedules a planting service appointment.
+    """Schedules a reading consultation appointment.
 
     Args:
         customer_id: The ID of the customer.
         date:  The desired date (YYYY-MM-DD).
         time_range: The desired time range (e.g., "9-12").
-        details: Any additional details (e.g., "Planting Petunias").
+        details: Any additional details (e.g., "Book recommendations for mystery novels").
 
     Returns:
         A dictionary indicating the status of the scheduling. Example:
         {'status': 'success', 'appointment_id': '12345', 'date': '2024-07-29', 'time': '9:00 AM - 12:00 PM'}
 
     Example:
-        >>> schedule_planting_service(customer_id='123', date='2024-07-29', time_range='9-12', details='Planting Petunias')
+        >>> schedule_reading_consultation(customer_id='123', date='2024-07-29', time_range='9-12', details='Book recommendations for mystery novels')
         {'status': 'success', 'appointment_id': 'some_uuid', 'date': '2024-07-29', 'time': '9-12', 'confirmation_time': '2024-07-29 9:00'}
     """
     logger.info(
-        "Scheduling planting service for customer ID: %s on %s (%s)",
+        "Scheduling reading consultation for customer ID: %s on %s (%s)",
         customer_id,
         date,
         time_range,
@@ -290,8 +305,8 @@ def schedule_planting_service(
     }
 
 
-def get_available_planting_times(date: str) -> list:
-    """Retrieves available planting service time slots for a given date.
+def get_available_consultation_times(date: str) -> list:
+    """Retrieves available reading consultation time slots for a given date.
 
     Args:
         date: The date to check (YYYY-MM-DD).
@@ -300,42 +315,42 @@ def get_available_planting_times(date: str) -> list:
         A list of available time ranges.
 
     Example:
-        >>> get_available_planting_times(date='2024-07-29')
+        >>> get_available_consultation_times(date='2024-07-29')
         ['9-12', '13-16']
     """
-    logger.info("Retrieving available planting times for %s", date)
+    logger.info("Retrieving available consultation times for %s", date)
     # MOCK API RESPONSE - Replace with actual API call
     # Generate some mock time slots, ensuring they're in the correct format:
     return ["9-12", "13-16"]
 
 
-def send_care_instructions(
-    customer_id: str, plant_type: str, delivery_method: str
+def send_reading_recommendations(
+    customer_id: str, reading_interests: str, delivery_method: str
 ) -> dict:
-    """Sends an email or SMS with instructions on how to take care of a specific plant type.
+    """Sends an email or SMS with personalized reading recommendations and book care tips.
 
     Args:
         customer_id:  The ID of the customer.
-        plant_type: The type of plant.
+        reading_interests: The customer's reading interests or preferred genres.
         delivery_method: 'email' (default) or 'sms'.
 
     Returns:
         A dictionary indicating the status.
 
     Example:
-        >>> send_care_instructions(customer_id='123', plant_type='Petunias', delivery_method='email')
-        {'status': 'success', 'message': 'Care instructions for Petunias sent via email.'}
+        >>> send_reading_recommendations(customer_id='123', reading_interests='Mystery novels', delivery_method='email')
+        {'status': 'success', 'message': 'Reading recommendations for Mystery novels sent via email.'}
     """
     logger.info(
-        "Sending care instructions for %s to customer: %s via %s",
-        plant_type,
+        "Sending reading recommendations for %s to customer: %s via %s",
+        reading_interests,
         customer_id,
         delivery_method,
     )
     # MOCK API RESPONSE - Replace with actual API call or email/SMS sending logic
     return {
         "status": "success",
-        "message": f"Care instructions for {plant_type} sent via {delivery_method}.",
+        "message": f"Reading recommendations for {reading_interests} sent via {delivery_method}.",
     }
 
 

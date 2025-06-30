@@ -50,15 +50,15 @@ class CommunicationPreferences(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class GardenProfile(BaseModel):
+class ReadingProfile(BaseModel):
     """
-    Represents a customer's garden profile.
+    Represents a customer's reading profile.
     """
 
-    type: str
-    size: str
-    sun_exposure: str
-    soil_type: str
+    preferred_genres: List[str]
+    reading_level: str
+    favorite_authors: List[str]
+    reading_goals: str
     interests: List[str]
     model_config = ConfigDict(from_attributes=True)
 
@@ -81,7 +81,7 @@ class Customer(BaseModel):
     loyalty_points: int
     preferred_store: str
     communication_preferences: CommunicationPreferences
-    garden_profile: GardenProfile
+    reading_profile: ReadingProfile
     scheduled_appointments: Dict = Field(default_factory=dict)
     model_config = ConfigDict(from_attributes=True)
 
@@ -124,62 +124,62 @@ class Customer(BaseModel):
                     date="2023-03-05",
                     items=[
                         Product(
-                            product_id="fert-111",
-                            name="All-Purpose Fertilizer",
+                            product_id="book-111",
+                            name="The Thursday Murder Club by Richard Osman",
                             quantity=1,
                         ),
                         Product(
-                            product_id="trowel-222",
-                            name="Gardening Trowel",
+                            product_id="bookmark-222",
+                            name="Leather Bookmark Set",
                             quantity=1,
                         ),
                     ],
-                    total_amount=35.98,
+                    total_amount=24.98,
                 ),
                 Purchase(
                     date="2023-07-12",
                     items=[
                         Product(
-                            product_id="seeds-333",
-                            name="Tomato Seeds (Variety Pack)",
-                            quantity=2,
+                            product_id="book-333",
+                            name="Educated by Tara Westover",
+                            quantity=1,
                         ),
                         Product(
-                            product_id="pots-444",
-                            name="Terracotta Pots (6-inch)",
-                            quantity=4,
+                            product_id="book-444",
+                            name="The Seven Husbands of Evelyn Hugo",
+                            quantity=1,
                         ),
                     ],
-                    total_amount=42.5,
+                    total_amount=32.5,
                 ),
                 Purchase(
                     date="2024-01-20",
                     items=[
                         Product(
-                            product_id="gloves-555",
-                            name="Gardening Gloves (Leather)",
+                            product_id="book-555",
+                            name="Project Hail Mary by Andy Weir",
                             quantity=1,
                         ),
                         Product(
-                            product_id="pruner-666",
-                            name="Pruning Shears",
+                            product_id="lamp-666",
+                            name="LED Reading Lamp",
                             quantity=1,
                         ),
                     ],
-                    total_amount=55.25,
+                    total_amount=45.25,
                 ),
             ],
             loyalty_points=133,
-            preferred_store="Anytown Garden Store",
+            preferred_store="Downtown Library & Bookstore",
             communication_preferences=CommunicationPreferences(
                 email=True, sms=False, push_notifications=True
             ),
-            garden_profile=GardenProfile(
-                type="backyard",
-                size="medium",
-                sun_exposure="full sun",
-                soil_type="unknown",
-                interests=["flowers", "vegetables"],
+            reading_profile=ReadingProfile(
+                preferred_genres=["mystery", "memoir", "science fiction"],
+                reading_level="advanced",
+                favorite_authors=["Richard Osman", "Tara Westover", "Andy Weir"],
+                reading_goals="Read 24 books this year, explore more diverse authors",
+                interests=["book clubs", "author events", "reading challenges"],
             ),
             scheduled_appointments={},
         )
