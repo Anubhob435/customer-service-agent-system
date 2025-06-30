@@ -4,7 +4,7 @@ This project implements an AI-powered customer service agent for Literati Librar
 
 ## Overview
 
-The Literati Library & Bookstore Customer Service Agent is designed to provide a seamless and personalized book discovery experience for customers. It leverages Gemini to understand customer reading preferences, offer tailored book recommendations, manage orders, and schedule reading consultations. The agent is designed to be friendly, empathetic, and highly knowledgeable about literature, ensuring that customers receive the best possible service.
+The Literati Library & Bookstore Customer Service Agent is designed to provide a seamless and personalized book discovery experience for customers. It leverages Google Gemini API to understand customer reading preferences, offer tailored book recommendations, manage orders, and schedule reading consultations. The agent is designed to be friendly, empathetic, and highly knowledgeable about literature, ensuring that customers receive the best possible service.
 
 ## Agent Details
 
@@ -24,9 +24,19 @@ The key features of the Customer Service Agent include:
 
 The agent is built using a multi-modal architecture, combining text and video inputs to provide a rich and interactive experience. It mocks interactions with various tools and services, including a product catalog, inventory management, order processing, and appointment scheduling systems. The agent also utilizes a session management system to maintain context across interactions and personalize the customer experience.
 
-It is important to notice that this agent is not integrated to an actual backend and the behaviour is based on mocked tools. If you would like to implement this agent with actual backend integration you will need to edit [customer_service/tools.py](./customer_service/tools/tools.py)
+It is important to notice that this agent includes both mocked tools and real database integration. The inventory management system uses MongoDB for real book data storage, while other tools are mocked for demonstration purposes. If you would like to implement the remaining tools with actual backend integration you will need to edit [customer_service/tools.py](./customer_service/tools/tools.py)
 
-Because the tools are mocked you might notice that some requested changes will not be applied. For instance newly added item to cart will not show if later a user asks the agent to list all items.
+**Real Database Integration:**
+- `inventory_operations`: Connected to MongoDB for actual book inventory
+- Book recommendations and availability checking use real data
+
+**Mocked Tools:**
+- Cart management (newly added items won't persist)
+- Salesforce CRM updates
+- Appointment scheduling
+- Discount approvals
+
+For full production deployment, replace the mocked tools with actual service integrations.
 
 ### Key Features
 
@@ -89,32 +99,24 @@ The agent has access to the following tools:
 - Python 3.11+
 - Poetry (for dependency management)
 - Google ADK SDK (installed via Poetry)
-- Google Cloud Project (for Vertex AI Gemini integration)
+- Google Gemini API Key
 
 ### Installation
-1.  **Prerequisites:**
+1.  **Get Google Gemini API Key:**
 
-    For the Agent Engine deployment steps, you will need
-    a Google Cloud Project. Once you have created your project,
-    [install the Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
-    Then run the following command to authenticate with your project:
-    ```bash
-    gcloud auth login
-    ```
-    You also need to enable certain APIs. Run the following command to enable
-    the required APIs:
-    ```bash
-    gcloud services enable aiplatform.googleapis.com
-    ```
+    - Go to [Google AI Studio](https://aistudio.google.com/)
+    - Sign in with your Google account
+    - Click on "Get API key" to generate your Gemini API key
+    - Keep this key secure as you'll need it for configuration
 
 1.  Clone the repository:
 
     ```bash
-    git clone https://github.com/google/adk-samples.git
-    cd adk-samples/python/agents/customer-service
+    git clone <your-repository-url>
+    cd customer-service-agent-system
     ```
 
-    For the rest of this tutorial **ensure you remain in the `agents/customer-service` directory**.
+    For the rest of this tutorial **ensure you remain in the `customer-service-agent-system` directory**.
 
 2.  Install dependencies using Poetry:
 
@@ -130,34 +132,73 @@ The agent has access to the following tools:
   poetry env activate
   ```
 
-3.  Set up Google Cloud credentials:
+3.  Set up Google Gemini API credentials:
 
-    - Ensure you have a Google Cloud project.
-    - Make sure you have the Vertex AI API enabled in your project.
-    - Set the `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, and `GOOGLE_CLOUD_LOCATION` environment variables. You can set them in your `.env` file (modify and rename .env_sample file to .env) or directly in your shell. Alternatively you can edit [customer_service/config.py](./customer_service/config.py)
+    - Create a `.env` file in the root directory (copy from `.env_sample` if available)
+    - Add your Google Gemini API key and configuration:
 
     ```bash
-    export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_NAME_HERE
+    # .env file content
+    GOOGLE_GEMINI_API_KEY=your_gemini_api_key_here
+    GOOGLE_GENAI_USE_VERTEXAI=0
+    GOOGLE_CLOUD_PROJECT=your_project_name_here
+    GOOGLE_CLOUD_LOCATION=us-central1
+    ```
+
+    Alternatively, you can set these as environment variables:
+
+    ```bash
+    export GOOGLE_GEMINI_API_KEY=your_gemini_api_key_here
     export GOOGLE_GENAI_USE_VERTEXAI=0
+    export GOOGLE_CLOUD_PROJECT=your_project_name_here
     export GOOGLE_CLOUD_LOCATION=us-central1
+    ```
+
+    Or edit the configuration directly in [customer_service/config.py](./customer_service/config.py)
+
+4.  **Set up MongoDB (Required for inventory management):**
+
+    - Install MongoDB locally or use MongoDB Atlas
+    - Default connection: `mongodb://localhost:27017/`
+    - Run the sample data script to populate the database:
+
+    ```bash
+    python sampleData.py
     ```
 
 ## Running the Agent
 
-You can run the agent using the ADK commant in your terminal.
+You can run the agent using the ADK command in your terminal.
 from the root project directory:
 
-1.  Run agent in CLI:
+1.  **Make sure MongoDB is running** (if using local MongoDB):
+    
+    ```bash
+    # Start MongoDB service (varies by OS)
+    # Windows: mongod
+    # macOS: brew services start mongodb-community
+    # Linux: sudo systemctl start mongod
+    ```
+
+2.  Run agent in CLI:
 
     ```bash
     adk run customer_service
     ```
 
-2.  Run agent with ADK Web UI:
+3.  Run agent with ADK Web UI:
     ```bash
     adk web
     ```
     Select the customer_service from the dropdown
+
+### Model Configuration
+
+The system is configured to use Google Gemini API with the following models:
+- **Main Agent**: `gemini-1.5-flash` (supports function calling)
+- **Inventory Agent**: `gemini-1.5-flash` (for book inventory operations)
+
+**Note**: `gemini-2.5-flash` is available through Vertex AI. If you want to use it, set `GOOGLE_GENAI_USE_VERTEXAI=1` and ensure you have Vertex AI properly configured.
 
 ### Example Interaction
 
@@ -167,7 +208,7 @@ Here's a quick example of how a user might interact with the agent:
 hi there
 
 **Agent**:
-Hey Alex, I see you've been a Literati Library & Bookstore customer for a couple of years now - we appreciate your business! I also see you have a few things in your cart already. How can I help you find your next great read today?
+Hey Anubhob, I see you've been a Literati Library & Bookstore customer for a couple of years now - we appreciate your business! I also see you have a few things in your cart already. How can I help you find your next great read today?
 
 **User**:
 Yeah, so I'm a bit confused. I just finished reading some mystery novels and I loved them. I'm looking for something similar but maybe with a different twist. I have a couple of books in my cart but I'm not sure if they're the right ones for me.
@@ -182,18 +223,18 @@ Sure, how do I do that?
 I just texted you a link to the number in your profile. Just click on that, and it'll open a secure video connection.
 
 ```tool_code
-print(send_call_companion_link(phone_number='+12065550123'))
+print(send_call_companion_link(phone_number='+91-1234567890'))
 ```
 
 ```tool_outputs
-{'status': 'success', 'message': 'Link sent to +12065550123'}
+{'status': 'success', 'message': 'Link sent to +91-1234567890'}
 ```
 
 **User**:
 Okay, I clicked the link...can you see this?
 
 **Agent**:
-Yes I can see you Alex! I'd love to hear more about the mystery novels you've enjoyed recently. Can you tell me about some of your favorites and what specifically you liked about them?
+Yes I can see you Anubhob! I'd love to hear more about the mystery novels you've enjoyed recently. Can you tell me about some of your favorites and what specifically you liked about them?
 
 **User**:
 Yes of course!
@@ -229,4 +270,45 @@ Unit tests focus on testing individual units or components of the code in isolat
 
 ## Configuration
 
-You can find further configuration parameters in [customer_service/config.py](./customer_service/config.py). This incudes parameters such as agent name, app name and llm model used by the agent.
+You can find further configuration parameters in [customer_service/config.py](./customer_service/config.py). This includes parameters such as agent name, app name and llm model used by the agent.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Tool use with function calling is unsupported" Error:**
+   - Make sure you're using `gemini-1.5-flash` model
+   - Verify `GOOGLE_GENAI_USE_VERTEXAI=0` in your configuration
+   - Check that your API key is valid
+
+2. **MongoDB Connection Issues:**
+   - Ensure MongoDB is running: `mongod` (or your OS-specific command)
+   - Check connection string: `mongodb://localhost:27017/`
+   - Populate database: `python sampleData.py`
+
+3. **Missing API Key:**
+   - Get your API key from [Google AI Studio](https://aistudio.google.com/)
+   - Set it in `.env` file or environment variables
+   - Restart the application after setting the key
+
+4. **Import Errors:**
+   - Install dependencies: `poetry install` or `pip install -r requirements.txt`
+   - Activate virtual environment: `poetry shell`
+
+### Testing Inventory Function
+
+To test the MongoDB inventory integration independently:
+
+```bash
+python testTOOL.py
+```
+
+This will run comprehensive tests on the inventory operations function.
+
+## Architecture Notes
+
+- **Main Agent**: Handles customer interactions and coordinates with sub-agents
+- **Inventory Agent**: Specialized for book inventory queries using MongoDB
+- **Database**: MongoDB with 15 sample books across multiple genres
+- **API**: Google Gemini API for natural language processing
+- **Tools**: Mix of real (inventory) and mocked (cart, CRM) integrations

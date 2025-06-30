@@ -1,5 +1,4 @@
 
-"""An agent that can assist with checking inventory of books in a library 
-and providing information about books in the library"""
+"""An agent that provides a list of books available in inventory along with details of the books such as gunre and author"""
 
 from .agent import librarian_agent

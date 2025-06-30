@@ -20,8 +20,8 @@ def send_call_companion_link(phone_number: str) -> str:
         dict: A dictionary with the status and message.
 
     Example:
-        >>> send_call_companion_link(phone_number='+12065550123')
-        {'status': 'success', 'message': 'Link sent to +12065550123'}
+        >>> send_call_companion_link(phone_number='+91-1234567890')
+        {'status': 'success', 'message': 'Link sent to +91-1234567890'}
     """
 
     logger.info("Sending call companion link to %s", phone_number)
